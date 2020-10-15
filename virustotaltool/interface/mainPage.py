@@ -30,10 +30,10 @@ class mainWindow(tk.Frame):
         b4 = dbutton(buttonframe, text="Search history")# , command=p4.lift)
         b5 = dbutton(buttonframe, text="Settings")# , command=p5.lift)
 
-        b1.pack(side="left", padx=(125,10), pady=(10,10))
+        b1.pack(side="left", padx=(125,0), pady=(10,10))
         b2.pack(side="left", padx=(0, 10), pady=(10,10))
         b3.pack(side="left", padx=(0, 10), pady=(10,10))
         b4.pack(side="left", padx=(0, 10), pady=(10,10))
-        b5.pack(side="left", padx=(10,125), pady=(10,10))
+        b5.pack(side="left", padx=(0,125), pady=(10,10))
 
         # p1.show()
