@@ -1,5 +1,6 @@
-import darkMotive
 import tkinter as tk
+
+from .darkMotive import dbutton
 
 class mainWindow(tk.Frame):
     def __init__(self, *args, **kwargs):
@@ -23,16 +24,16 @@ class mainWindow(tk.Frame):
         # p4.place(in_=container, x=0, y=0, relwidth=1, relheight=1)
         # p5.place(in_=container, x=0, y=0, relwidth=1, relheight=1)
 
-        # b1_get_report = dbutton(buttonframe, text="URL report", command=p1.lift)
-        # b2 = dbutton(buttonframe, text="URL scan", command=p2.lift)
-        # b3 = dbutton(buttonframe, text="File scan", command=p3.lift)
-        # b4 = dbutton(buttonframe, text="Search history", command=p4.lift)
-        # b5 = dbutton(buttonframe, text="Settings", command=p5.lift)
+        b1 = dbutton(buttonframe, text="URL report")# , command=p1.lift)
+        b2 = dbutton(buttonframe, text="URL scan")# , command=p2.lift)
+        b3 = dbutton(buttonframe, text="File scan")# , command=p3.lift)
+        b4 = dbutton(buttonframe, text="Search history")# , command=p4.lift)
+        b5 = dbutton(buttonframe, text="Settings")# , command=p5.lift)
 
-        # b1_get_report.pack(side="left", padx=(125,10), pady=(10,0))
-        # b2.pack(side="left", padx=(0, 10), pady=(10,0))
-        # b3.pack(side="left", padx=(0, 10), pady=(10,0))
-        # b4.pack(side="left", padx=(0, 10), pady=(10,0))
-        # b5.pack(side="left", padx=(0,125), pady=(10,0))
+        b1.pack(side="left", padx=(125,10), pady=(10,10))
+        b2.pack(side="left", padx=(0, 10), pady=(10,10))
+        b3.pack(side="left", padx=(0, 10), pady=(10,10))
+        b4.pack(side="left", padx=(0, 10), pady=(10,10))
+        b5.pack(side="left", padx=(10,125), pady=(10,10))
 
         # p1.show()
