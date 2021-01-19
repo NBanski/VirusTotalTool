@@ -6,7 +6,7 @@ from modules.local.databaseBasic import createDb, executeSchema
 workingDirectory = os.path.dirname(__file__)
 configDirectoryPath = os.path.normpath(os.path.join(workingDirectory, "..", "..", "config"))
 apiFilePath = os.path.normpath(os.path.join(workingDirectory, "..", "..", "config", "api.env"))
-proxyFilePath = os.path.normpath(os.path.join(workingDirectory, "..", "..", "config", "proxy.config"))
+proxyFilePath = os.path.normpath(os.path.join(workingDirectory, "..", "..", "config", "proxy.conf"))
 
 # Checks if database directory exists/create it.
 def createConfigDirectory():
@@ -20,6 +20,14 @@ def createConfigDirectory():
             pass
         with open(proxyFilePath, "x"):
             pass
+
+def createProxyFile(proxyFilePath):
+    with open(proxyFilePath, "a") as f:
+        f.write("protocol=\n")
+        f.write("address=\n")
+        f.write("port=\n")
+        f.write("user=\n")
+        f.write("password=\n")
 
 # Writes VirusTotal API Key into the api file.
 def setApi(key):
@@ -50,18 +58,18 @@ def startConfigFiles():
     isDirectory = os.path.isdir(configDirectoryPath)
     isEnv = os.path.isfile(apiFilePath)
     isProxy = os.path.isfile(proxyFilePath)
-    if isDirectory == True and isEnv == True:
+    if isDirectory == True and isEnv == True and isProxy == True:
         print("All configuration files in place.")
     elif isDirectory == False:
         createConfigDirectory()
         key = input("Enter VT API key:\n> ")
         setApi(key)
+        createProxyFile(proxyFilePath)
     elif isEnv == False:
         key = input("Enter VT API Key:\n")
         setApi(key)
         if isProxy == False:
-            with open(proxyFilePath, "x"):
-                pass
+            createProxyFile(proxyFilePath)
         else:
             pass
 
