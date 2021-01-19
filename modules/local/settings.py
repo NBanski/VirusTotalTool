@@ -6,6 +6,7 @@ from modules.local.databaseBasic import createDb, executeSchema
 workingDirectory = os.path.dirname(__file__)
 configDirectoryPath = os.path.normpath(os.path.join(workingDirectory, "..", "..", "config"))
 apiFilePath = os.path.normpath(os.path.join(workingDirectory, "..", "..", "config", "api.env"))
+proxyFilePath = os.path.normpath(os.path.join(workingDirectory, "..", "..", "config", "proxy.config"))
 
 # Checks if database directory exists/create it.
 def createConfigDirectory():
@@ -16,6 +17,8 @@ def createConfigDirectory():
         print("Configuration directory doesn't exist. Creating...")
         os.makedirs(configDirectoryPath)
         with open(apiFilePath, "x"):
+            pass
+        with open(proxyFilePath, "x"):
             pass
 
 # Writes VirusTotal API Key into the api file.
