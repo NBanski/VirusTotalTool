@@ -1,0 +1,4 @@
+v 1.1
+- Domains with no report on in VT database are now listed in "URL repor" tab for convenient copying.
+- Minor tweaks in descriptions.
+- Refactored the whole code: separation of modules, renaming functions, separation of classes.

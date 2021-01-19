@@ -1,6 +1,6 @@
 import os
-from modules.local.database import dbPath
-from modules.local.database import createDb, executeSchema
+from modules.local.databaseBasic import dbPath
+from modules.local.databaseBasic import createDb, executeSchema
 
 # Configuration file/directory path.
 workingDirectory = os.path.dirname(__file__)
@@ -32,7 +32,7 @@ def loadApi():
     try:
         with open(apiFilePath, "r") as f:
             key = f.readline().split('=')[1].strip('"')
-            return key
+        return key
     except FileNotFoundError as e:
         print("Config file not found!")
         print(e)
