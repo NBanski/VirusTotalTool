@@ -1,45 +1,67 @@
 import os
+from modules.local.database import dbPath
+from modules.local.database import createDb, executeSchema
 
 # Configuration file/directory path.
 workingDirectory = os.path.dirname(__file__)
-configDirectory = os.path.normpath(os.path.join(workingDirectory, "..", "..", "config"))
-keyPath = os.path.normpath(os.path.join(workingDirectory, "..", "..", "config", "api.env"))
+configDirectoryPath = os.path.normpath(os.path.join(workingDirectory, "..", "..", "config"))
+apiFilePath = os.path.normpath(os.path.join(workingDirectory, "..", "..", "config", "api.env"))
 
-# Check if database directory exists/create it.
+# Checks if database directory exists/create it.
 def createConfigDirectory():
-    if os.path.exists(configDirectory):
+    if os.path.exists(configDirectoryPath):
         print("Configuration directory exists.")
         pass
     else:
         print("Configuration directory doesn't exist. Creating...")
-        os.makedirs(configDirectory)
-
-# Check if database directory exists/create it.
-def createApiFile():
-    if os.path.exists(keyPath):
-        print("API key file exists.")
-        pass
-    else:
-        print("API key file does not exist. Creating...")
-        with open(keyPath, "a"):
+        os.makedirs(configDirectoryPath)
+        with open(apiFilePath, "x"):
             pass
 
-# Write VirusTotal API Key into the api file.
+# Writes VirusTotal API Key into the api file.
 def setApi(key):
     try:
-        with open(keyPath, "w") as f:
+        with open(apiFilePath, "w") as f:
             apiString = "KEY=" + '"' + key + '"'
             f.write(apiString)
     except FileNotFoundError as e:
         print(e)
 
+# Loads API key.
 def loadApi():
     try:
-        with open(keyPath, "r") as f:
+        with open(apiFilePath, "r") as f:
             key = f.readline().split('=')[1].strip('"')
             return key
     except FileNotFoundError as e:
-        print("Api key file not found!")
+        print("Config file not found!")
         print(e)
     except IndexError:
         print("No valid API Key was found.")
+
+# First start checks and tweaks.
+
+def startConfigFiles():
+    print("Running initial file checks...")
+    # Initial checks - is there config directory, are there config/env files?
+    isDirectory = os.path.isdir(configDirectoryPath)
+    isEnv = os.path.isfile(apiFilePath)
+    if isDirectory == True and isEnv == True:
+        print("All configuration files in place.")
+    elif isDirectory == False:
+        createConfigDirectory()
+        key = input("Enter VT API key:\n> ")
+        setApi(key)
+    elif isEnv == False:
+        key = input("Enter VT API Key:\n")
+        setApi(key)
+
+def startDatabase():
+    isDatabase = os.path.isfile(dbPath)
+    if isDatabase == True:
+        print("There is a database.")
+    else:
+        print("There is no db. :(")
+        createDb()
+        executeSchema()
+        print("And now there is a db. :)")

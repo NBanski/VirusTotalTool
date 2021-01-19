@@ -8,7 +8,7 @@ directoryPath = os.path.normpath(os.path.join(workingDirectory, "..", "..", "dat
 dbPath = os.path.normpath(os.path.join(workingDirectory, "..", "..", "database", "vttool.db"))
 
 # Schema.sql path.
-schemaPath = os.path.normpath(os.path.join(workingDirectory, "schema.sql"))
+schemaPath = os.path.normpath(os.path.join(workingDirectory, "..", "..", "database", "schema.sql"))
 
 # Check if database directory exists/create it.
 def createDbDirectory():
@@ -43,7 +43,7 @@ def connectDb():
 
 # Initialise database.
 # Erase tables, create new ones.
-def initDb():
+def executeSchema():
     try:
         db = connectDb()
         with open(schemaPath, "r") as f:
