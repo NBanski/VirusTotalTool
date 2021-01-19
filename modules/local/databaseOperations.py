@@ -26,7 +26,6 @@ def insertReport(id):
     for _ in values:
         sql_string += "'" + str(_) + "'" + ", "
     sql_string = sql_string[:-2] + ")"
-    # Do usunięcia przed wersją finalną.
     try:
         db = connectDb()
         db.executescript(sql_string)
