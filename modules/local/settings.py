@@ -49,6 +49,7 @@ def startConfigFiles():
     # Initial checks - is there config directory, are there config/env files?
     isDirectory = os.path.isdir(configDirectoryPath)
     isEnv = os.path.isfile(apiFilePath)
+    isProxy = os.path.isfile(proxyFilePath)
     if isDirectory == True and isEnv == True:
         print("All configuration files in place.")
     elif isDirectory == False:
@@ -58,6 +59,11 @@ def startConfigFiles():
     elif isEnv == False:
         key = input("Enter VT API Key:\n")
         setApi(key)
+        if isProxy == False:
+            with open(proxyFilePath, "x"):
+                pass
+        else:
+            pass
 
 def startDatabase():
     isDatabase = os.path.isfile(dbPath)

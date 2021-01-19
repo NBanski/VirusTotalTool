@@ -5,7 +5,7 @@ from modules.gui.reportsPage import reportsPage
 from modules.gui.scansPage import scansPage
 # from modules.gui.filesPage import filesPage
 from modules.gui.historyPage import historyPage
-# from modules.gui.configPage import configPage
+from modules.gui.configPage import configPage
 
 
 class mainFrame(tk.Frame):
@@ -15,7 +15,7 @@ class mainFrame(tk.Frame):
         p2 = scansPage(self)
         # p3 = filesPage(self)
         p4 = historyPage(self)
-        # p5 = configPage(self)
+        p5 = configPage(self)
 
         # Navbar buttons frame settings. 
 
@@ -34,7 +34,7 @@ class mainFrame(tk.Frame):
         b2 = dbutton(buttonframe, text="URL scan", command=p2.lift)
         b3 = dbutton(buttonframe, text="File scan" """ command=p3.lift """)
         b4 = dbutton(buttonframe, text="Search history", command=p4.lift)
-        b5 = dbutton(buttonframe, text="Settings" """ command=p5.lift """)
+        b5 = dbutton(buttonframe, text="Settings", command=p5.lift)
 
         # Top navbar buttons packing.
 
@@ -50,6 +50,6 @@ class mainFrame(tk.Frame):
         p2.place(in_=container, x=0, y=0, relwidth=1, relheight=1)
         # p3.place(in_=container, x=0, y=0, relwidth=1, relheight=1)
         p4.place(in_=container, x=0, y=0, relwidth=1, relheight=1)
-        # p5.place(in_=container, x=0, y=0, relwidth=1, relheight=1)
+        p5.place(in_=container, x=0, y=0, relwidth=1, relheight=1)
 
         p1.show()
