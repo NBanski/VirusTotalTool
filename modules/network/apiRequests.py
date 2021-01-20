@@ -11,10 +11,18 @@ def getUrlScan(urlToScan):
     response = requests.post(url, data=params)
     return response
 
-# Request for a single report.
+# Request for a single report for URL or ID.
 def getReport(resource):
     url = "https://virustotal.com/vtapi/v2/url/report"
     apiKey = loadApi()
     params = {"apikey": apiKey, "resource": resource}
+    response = requests.post(url, data=params)
+    return response
+
+# Request for a single report.
+def getFileReport(fileHash):
+    url = "https://virustotal.com/vtapi/v2/file/report"
+    apiKey = loadApi()
+    params = {"apikey": apiKey, "resource": fileHash}
     response = requests.post(url, data=params)
     return response

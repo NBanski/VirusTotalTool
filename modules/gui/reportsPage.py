@@ -54,7 +54,6 @@ Acceptable format is <domain name>.<extension>. Do not use any protocol prefixes
                     unfound.append(domain)
                 else:
                     pass
-        print(unfound)
         if unfound:
             result_box.insert(tk.END, "\nDomains that were not found:\n")
             for _ in unfound:
