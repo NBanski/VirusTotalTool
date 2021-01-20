@@ -44,6 +44,7 @@ class mainFrame(tk.Frame):
         b4.pack(side="left", padx=(0, 10), pady=(10,10))
         b5.pack(side="left", padx=(0,125), pady=(10,10))
 
+
         # Packing pages in container (mainframe).
 
         p1.place(in_=container, x=0, y=0, relwidth=1, relheight=1)
