@@ -53,7 +53,6 @@ class filesPage(dpage):
         
         def getFilesInfo():
             infoPaths = filePaths
-            print(infoPaths)
 
         # Buttons to operate on file.
 
