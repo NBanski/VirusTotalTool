@@ -11,7 +11,6 @@ def insertReport(id):
     # Taking response from HTTP API.
     data = getReport(id)
     data = data.json()
-    print(data)
     # Here we have to check response code.
     if data["response_code"] == 0:
         table_name = "not_found"
@@ -29,7 +28,6 @@ def insertReport(id):
     sql_string = sql_string[:-2] + ")"
     try:
         db = connectDb()
-        print(sql_string)
         db.executescript(sql_string)
     except sqlite3.IntegrityError as e:
         print(e)
@@ -38,7 +36,6 @@ def insertFileReport(fileHash):
     # Taking response from HTTP API.
     data = getFileReport(fileHash)
     data = data.json()
-    print(data)
     # Here we have to check response code.
     if data["response_code"] == 0:
         tableName = "not_found"
@@ -56,7 +53,6 @@ def insertFileReport(fileHash):
     sqlString = sqlString[:-2] + ")"
     try:
         db = connectDb()
-        print(sqlString)
         db.executescript(sqlString)
     except sqlite3.IntegrityError as e:
         print(e)
