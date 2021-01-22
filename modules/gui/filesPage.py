@@ -3,6 +3,7 @@ import tkinter.scrolledtext as stxt
 
 from tkinter.filedialog import askopenfilenames
 from modules.gui.darkMotive import dframe, dbutton, dlabel, dpage
+from modules.local.fileOperations import getFileSize, getFileName, getFileMimeEncoding
 
 class filesPage(dpage):
     def __init__(self, *args, **kwargs):
@@ -40,21 +41,34 @@ class filesPage(dpage):
             # Updating initial prompt.
             fileBox.configure(state="normal")
             fileBox.delete(1.0, tk.END)
-            fileBox.insert(tk.END, "Files supplied:")
+            fileBox.insert(tk.END, "Files supplied:\n")
+            for path in filePaths:
+                fileBox.insert(tk.END, (path + "\n"))
             fileBox.configure(state="disabled")
 
-        # Button to load file.
+        # Button for loading file.
 
         bLoadFile = dbutton(self,
         text="Load files",
         command=askForFilePath)
 
-        # Logic to getting information about files.
+        # Logic for getting information about files.
         
+        beautyBreaker = "-------------------\n"
+
         def getFilesInfo():
             infoPaths = filePaths
+            fileBox.configure(state="normal")
+            fileBox.delete(1.0, tk.END)
+            fileBox.insert(tk.END, beautyBreaker)
+            for element in infoPaths:
+                fileBox.insert(tk.END, (str(getFileName(element)) + "\n"))
+                fileBox.insert(tk.END, (str(getFileSize(element)) + "\n"))
+                fileBox.insert(tk.END, (str(getFileMimeEncoding(element)) + "\n"))
+                fileBox.insert(tk.END, beautyBreaker)
+            fileBox.configure(state="disabled")
 
-        # Buttons to operate on file.
+        # Buttons for operating on files.
 
         bFileInfo = dbutton(self,
         text="Get info",
