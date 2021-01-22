@@ -1,16 +1,17 @@
 import sqlite3, json
 
 from modules.local.databaseBasic import connectDb
-from modules.network.apiRequests import getReport, getUrlScan
+from modules.network.apiRequests import getReport, getUrlScan, getFileReport
 
 def sqliteWildcard(keyword):
     keyword = "'%" + keyword + "%'"
     return keyword
 
 def insertReport(id):
-    # Taking response from HTTP API request.
+    # Taking response from HTTP API.
     data = getReport(id)
     data = data.json()
+    print(data)
     # Here we have to check response code.
     if data["response_code"] == 0:
         table_name = "not_found"
@@ -28,7 +29,35 @@ def insertReport(id):
     sql_string = sql_string[:-2] + ")"
     try:
         db = connectDb()
+        print(sql_string)
         db.executescript(sql_string)
+    except sqlite3.IntegrityError as e:
+        print(e)
+
+def insertFileReport(fileHash):
+    # Taking response from HTTP API.
+    data = getFileReport(fileHash)
+    data = data.json()
+    print(data)
+    # Here we have to check response code.
+    if data["response_code"] == 0:
+        tableName = "not_found"
+        x = 3
+    elif data["response_code"] == 1:
+        tableName = "file_reports"
+        x = 11
+    # Extracting key values from JSON data do create SQL query.
+    columns = list(data.keys())[1:x]
+    values = list(data.values())[1:x]
+    sqlString = 'INSERT INTO {} '.format(tableName)
+    sqlString += "(" + ", ".join(columns) + ")\nVALUES " + "("
+    for _ in values:
+        sqlString += "'" + str(_) + "'" + ", "
+    sqlString = sqlString[:-2] + ")"
+    try:
+        db = connectDb()
+        print(sqlString)
+        db.executescript(sqlString)
     except sqlite3.IntegrityError as e:
         print(e)
 

@@ -1,4 +1,5 @@
 import os, mimetypes
+import hashlib
 
 # This function scans file and returns path, size in bytes, mimetype/encoding.
 def scanFile(path):
@@ -30,3 +31,14 @@ def getFileSize(path):
 def getFileMimeEncoding(path):
     mimeEncoding = mimetypes.guess_type(path)
     return mimeEncoding
+
+def hashFile(path):
+    # Setting buffer size to limit the RAM use.
+    blockSize = 65536
+    fileHash = hashlib.sha256()
+    with open(path, "rb") as f:
+        fBlock = f.read(blockSize)
+        while len(fBlock) > 0:
+            fileHash.update(fBlock)
+            fBlock = f.read(blockSize)
+    return(fileHash.hexdigest())

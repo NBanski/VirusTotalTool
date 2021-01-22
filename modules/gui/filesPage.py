@@ -3,7 +3,8 @@ import tkinter.scrolledtext as stxt
 
 from tkinter.filedialog import askopenfilenames
 from modules.gui.darkMotive import dframe, dbutton, dlabel, dpage
-from modules.local.fileOperations import getFileSize, getFileName, getFileMimeEncoding
+from modules.local.fileOperations import getFileSize, getFileName, getFileMimeEncoding, hashFile
+from modules.local.databaseOperations import insertFileReport
 
 class filesPage(dpage):
     def __init__(self, *args, **kwargs):
@@ -54,7 +55,7 @@ class filesPage(dpage):
 
         # Logic for getting information about files.
         
-        beautyBreaker = "-------------------\n"
+        beautyBreaker = "---------------------------------------------------------\n"
 
         def getFilesInfo():
             infoPaths = filePaths
@@ -65,8 +66,17 @@ class filesPage(dpage):
                 fileBox.insert(tk.END, (str(getFileName(element)) + "\n"))
                 fileBox.insert(tk.END, (str(getFileSize(element)) + "\n"))
                 fileBox.insert(tk.END, (str(getFileMimeEncoding(element)) + "\n"))
+                fileBox.insert(tk.END, (str(hashFile(element)) + "\n"))
                 fileBox.insert(tk.END, beautyBreaker)
             fileBox.configure(state="disabled")
+
+        # Logic for getting reports about files.
+
+        def getFilesReport():
+            reportPaths = filePaths
+            for element in reportPaths:
+                elementHash = hashFile(element)
+                insertFileReport(elementHash)
 
         # Buttons for operating on files.
 
@@ -75,7 +85,8 @@ class filesPage(dpage):
         command=getFilesInfo)
 
         bFileReport = dbutton(self,
-        text="Get reports")
+        text="Get reports",
+        command=getFilesReport)
 
         bFileScan = dbutton(self,
         text="Scan files")
