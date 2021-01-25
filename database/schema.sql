@@ -32,3 +32,9 @@ CREATE TABLE file_reports (
   positives TEXT NOT NULL,
   sha256 TEXT NOT NULL
 );
+
+CREATE TABLE file_not_found (
+    response_code TEXT NOT NULL,
+    resource TEXT NOT NULL,
+    verbose_msg TEXT NOT NULL
+);

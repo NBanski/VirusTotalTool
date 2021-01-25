@@ -4,7 +4,7 @@ import tkinter.scrolledtext as stxt
 from tkinter.filedialog import askopenfilenames
 from modules.gui.darkMotive import dframe, dbutton, dlabel, dpage
 from modules.local.fileOperations import getFileSize, getFileName, getFileMimeEncoding, hashFile
-from modules.local.databaseOperations import insertFileReport
+from modules.local.databaseOperations import insertFileReport, extractReportByHash
 
 class filesPage(dpage):
     def __init__(self, *args, **kwargs):
@@ -77,6 +77,49 @@ class filesPage(dpage):
             for element in reportPaths:
                 elementHash = hashFile(element)
                 insertFileReport(elementHash)
+            fileBox.configure(state="normal")
+            fileBox.delete(1.0, tk.END)
+            fileBox.insert(tk.END, beautyBreaker)
+            for element in reportPaths:
+                elementHash = hashFile(element)
+                fileBox.insert(tk.END, (str(getFileName(element)) + "\n"))
+                fileBox.insert(tk.END, (str(getFileSize(element)) + "\n"))
+                fileBox.insert(tk.END, (str(extractReportByHash(elementHash)) + "\n"))
+                fileBox.insert(tk.END, (elementHash + "\n"))
+                fileBox.insert(tk.END, beautyBreaker)
+            fileBox.configure(state="disabled")
+
+        # Logic for sending file to a server.
+
+        def fileScanWarning():
+            warningWindow = tk.Tk()
+            warningWindow["bg"] = "gray15"
+            warningWindow.title("Warning!")
+            warningWindow.geometry("450x150")
+            warningWindow.resizable(0, 0)
+
+            warningText = '''You are going to send files to VirusTotal for scanning.
+Keep it mind that these files will be stored on VT servers.
+Are you sure they do not contain data sensitive for you or your organisation?'''
+
+            warningLabel = dlabel(warningWindow, text=warningText, justify="center")
+            warningButtonYes = dbutton(warningWindow, text="Yes")
+            warningButtonNo = dbutton(warningWindow, text="No")
+
+            # warningLabel.grid(column=0, row=0, padx=(10,0), pady=(20, 0), columnspan=3)
+            # warningButtonYes.grid(column=1, row=1, padx=(10,0), pady=(20, 0), sticky="E")
+            # warningButtonNo.grid(column=2, row=1, padx=(10,0), pady=(20, 0), sticky="W")
+
+            warningLabel.pack(padx=20, pady=20)
+            warningButtonYes.pack(side="left", padx=(50, 10), pady=(0, 10))
+            warningButtonNo.pack(side="right", padx=(10, 50), pady=(0, 10))
+
+            def closeWarningWindowNo():
+                warningWindow.destroy()
+
+            def closeWarningWindowYes():
+                warningWindow.destroy()
+
 
         # Buttons for operating on files.
 
@@ -89,7 +132,8 @@ class filesPage(dpage):
         command=getFilesReport)
 
         bFileScan = dbutton(self,
-        text="Scan files")
+        text="Scan files",
+        command=fileScanWarning)
 
         # Loading widgets to interface.
 

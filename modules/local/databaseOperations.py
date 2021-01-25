@@ -38,7 +38,7 @@ def insertFileReport(fileHash):
     data = data.json()
     # Here we have to check response code.
     if data["response_code"] == 0:
-        tableName = "not_found"
+        tableName = "file_not_found"
         x = 3
     elif data["response_code"] == 1:
         tableName = "file_reports"
@@ -97,6 +97,30 @@ def extractReportById(id):
         print(e)
         try:
             sql_string = "SELECT * FROM not_found WHERE resource LIKE {}".format("'" + id + "'")
+            not_found = db.execute(sql_string).fetchone()
+            url = not_found[1]
+            return (url + " not found in the dataset.")
+        except TypeError as e:
+            print(e)
+            return("Incorrect input.")
+
+def extractReportByHash(hash):
+    sql_string = "SELECT * FROM file_reports WHERE resource LIKE {} ORDER BY scan_date DESC".format("'" + hash + "'")
+    try:
+        db = connectDb()
+        report = db.execute(sql_string).fetchone()
+        # rep_hash = str(report[2])
+        rep_positives = str(report[8])
+        rep_all = str(report[7])
+        rep_time = str(report[4])
+        rep_data = (rep_positives + "/" + rep_all + " at " + rep_time)
+        return rep_data
+    except sqlite3.IntegrityError as e:
+        print(e)
+    except TypeError as e:
+        print(e)
+        try:
+            sql_string = "SELECT * FROM file_not_found WHERE resource LIKE {}".format("'" + id + "'")
             not_found = db.execute(sql_string).fetchone()
             url = not_found[1]
             return (url + " not found in the dataset.")
