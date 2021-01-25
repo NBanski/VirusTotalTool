@@ -134,5 +134,6 @@ config
 config/
 
 # DB.
-
+db
 .db
+database/*.db
