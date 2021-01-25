@@ -132,3 +132,7 @@ dmypy.json
 # Config.
 config
 config/
+
+# DB.
+
+.db
