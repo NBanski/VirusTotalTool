@@ -115,7 +115,7 @@ class filesPage(dpage):
                 fileBox.insert(tk.END, beautyBreaker)
                 fileBox.configure(state="disabled")
             fileBox.configure(state="normal")
-            fileBox.insert(tk.END, "Now wait for the results. \nIt may take some time; try to fetch reports after.")
+            fileBox.insert(tk.END, "Now wait for the results. \nIt may take some time; try to fetch reports after.\n")
             fileBox.insert(tk.END, beautyBreaker)
             fileBox.configure(state="disabled")
 
@@ -126,8 +126,8 @@ class filesPage(dpage):
             warningWindow.geometry("450x150")
             warningWindow.resizable(0, 0)
 
-            warningText = '''You are going to send files to VirusTotal for scanning.
-Keep it mind that these files will be stored on VT servers. 32 MB is maximal allowed filesize.
+            warningText = '''File size limit is 32 MB.
+Keep in mind that these files will be stored on VT servers. .
 Are you sure they do not contain data sensitive for you or your organisation?'''
 
             def closeWarningWindowNo():
