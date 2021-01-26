@@ -26,3 +26,13 @@ def getFileReport(fileHash):
     params = {"apikey": apiKey, "resource": fileHash}
     response = requests.post(url, data=params)
     return response
+
+# Sending a file with POST request.
+def getFileScan(filePath):
+    url = "https://www.virustotal.com/vtapi/v2/file/scan"
+    apiKey = loadApi()
+    params = {"apikey": apiKey}
+    files = {"file": (filePath, open(filePath, "rb"))}
+    response = requests.post(url, files=files, params=params)
+    print(response.json())
+    return response

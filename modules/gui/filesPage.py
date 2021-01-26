@@ -1,10 +1,12 @@
 import tkinter as tk
 import tkinter.scrolledtext as stxt
+from time import sleep 
 
 from tkinter.filedialog import askopenfilenames
 from modules.gui.darkMotive import dframe, dbutton, dlabel, dpage
 from modules.local.fileOperations import getFileSize, getFileName, getFileMimeEncoding, hashFile
 from modules.local.databaseOperations import insertFileReport, extractReportByHash
+from modules.network.apiRequests import getFileScan
 
 class filesPage(dpage):
     def __init__(self, *args, **kwargs):
@@ -91,6 +93,38 @@ class filesPage(dpage):
 
         # Logic for sending file to a server.
 
+        def scanFiles():
+            tempHashes = []
+            scanPaths = filePaths
+            fileBox.configure(state="normal")
+            fileBox.delete(tk.END, 1.0)
+            fileBox.insert(beautyBreaker)
+            fileBox.insert("Sending files now...\n")
+            fileBox.insert(beautyBreaker)
+            fileBox.configure(state="disabled")
+            for path in scanPaths:
+                response = getFileScan(path)
+                tempHash = response.json()[3]
+                tempName = getFileName(path)
+                tempHashes.append(tempHash)
+                fileBox.configure(state="normal")
+                fileBox.insert(tempName + "\n")
+                fileBox.insert("Sent.")
+                fileBox.insert(beautyBreaker)
+                fileBox.configure(state="diabled")
+            print(tempHashes)
+            fileBox.configure(state="normal")
+            fileBox.insert("Now wait for the results for about a minute.")
+            sleep(60)
+            fileBox.configure(state="normal")
+            fileBox.delete(1.0, tk.END)
+            fileBox.insert(tk.END, beautyBreaker)
+            for hash in tempHashes:
+                insertFileReport(hash)
+                fileBox.insert(tk.END, (hash + "\n"))
+                fileBox.insert(tk.END, (str(extractReportByHash(hash)) + "\n"))
+                fileBox.insert(tk.END, beautyBreaker)
+            fileBox.configure(state="disabled")   
         def fileScanWarning():
             warningWindow = tk.Tk()
             warningWindow["bg"] = "gray15"
@@ -102,24 +136,21 @@ class filesPage(dpage):
 Keep it mind that these files will be stored on VT servers.
 Are you sure they do not contain data sensitive for you or your organisation?'''
 
-            warningLabel = dlabel(warningWindow, text=warningText, justify="center")
-            warningButtonYes = dbutton(warningWindow, text="Yes")
-            warningButtonNo = dbutton(warningWindow, text="No")
-
-            # warningLabel.grid(column=0, row=0, padx=(10,0), pady=(20, 0), columnspan=3)
-            # warningButtonYes.grid(column=1, row=1, padx=(10,0), pady=(20, 0), sticky="E")
-            # warningButtonNo.grid(column=2, row=1, padx=(10,0), pady=(20, 0), sticky="W")
-
-            warningLabel.pack(padx=20, pady=20)
-            warningButtonYes.pack(side="left", padx=(50, 10), pady=(0, 10))
-            warningButtonNo.pack(side="right", padx=(10, 50), pady=(0, 10))
-
             def closeWarningWindowNo():
                 warningWindow.destroy()
 
             def closeWarningWindowYes():
+                scanFiles()
                 warningWindow.destroy()
 
+            warningLabel = dlabel(warningWindow, text=warningText, justify="center")
+            warningButtonYes = dbutton(warningWindow, text="Yes", command=closeWarningWindowYes)
+            warningButtonNo = dbutton(warningWindow, text="No", command=closeWarningWindowNo)
+
+            warningLabel.pack(padx=20, pady=20)
+            warningButtonYes.pack(side="left", padx=(50, 10), pady=(0, 10))
+            warningButtonNo.pack(side="right", padx=(10, 50), pady=(0, 10))
+  
 
         # Buttons for operating on files.
 

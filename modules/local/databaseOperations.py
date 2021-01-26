@@ -40,22 +40,35 @@ def insertFileReport(fileHash):
     if data["response_code"] == 0:
         tableName = "file_not_found"
         x = 3
+        # Extracting key values from JSON data do create SQL query.
+        columns = list(data.keys())[0:x]
+        values = list(data.values())[0:x]
+        sqlString = 'INSERT INTO {} '.format(tableName)
+        sqlString += "(" + ", ".join(columns) + ")\nVALUES " + "("
+        for _ in values:
+            sqlString += "'" + str(_) + "'" + ", "
+        sqlString = sqlString[:-2] + ")"
+        try:
+            db = connectDb()
+            db.executescript(sqlString)
+        except sqlite3.IntegrityError as e:
+            print(e)
     elif data["response_code"] == 1:
         tableName = "file_reports"
         x = 11
-    # Extracting key values from JSON data do create SQL query.
-    columns = list(data.keys())[1:x]
-    values = list(data.values())[1:x]
-    sqlString = 'INSERT INTO {} '.format(tableName)
-    sqlString += "(" + ", ".join(columns) + ")\nVALUES " + "("
-    for _ in values:
-        sqlString += "'" + str(_) + "'" + ", "
-    sqlString = sqlString[:-2] + ")"
-    try:
-        db = connectDb()
-        db.executescript(sqlString)
-    except sqlite3.IntegrityError as e:
-        print(e)
+        # Extracting key values from JSON data do create SQL query.
+        columns = list(data.keys())[1:x]
+        values = list(data.values())[1:x]
+        sqlString = 'INSERT INTO {} '.format(tableName)
+        sqlString += "(" + ", ".join(columns) + ")\nVALUES " + "("
+        for _ in values:
+            sqlString += "'" + str(_) + "'" + ", "
+        sqlString = sqlString[:-2] + ")"
+        try:
+            db = connectDb()
+            db.executescript(sqlString)
+        except sqlite3.IntegrityError as e:
+            print(e)
 
 def extractReportByUrl(url):
     sql_string = "SELECT * FROM reports WHERE url LIKE {} ORDER BY scan_date DESC".format("'%" + url + "%'")
@@ -120,10 +133,10 @@ def extractReportByHash(hash):
     except TypeError as e:
         print(e)
         try:
-            sql_string = "SELECT * FROM file_not_found WHERE resource LIKE {}".format("'" + id + "'")
+            sql_string = "SELECT * FROM file_not_found WHERE resource LIKE {}".format("'" + hash + "'")
             not_found = db.execute(sql_string).fetchone()
-            url = not_found[1]
-            return (url + " not found in the dataset.")
+            message = not_found[2]
+            return (message + ".")
         except TypeError as e:
             print(e)
             return("Incorrect input.")
