@@ -97,34 +97,28 @@ class filesPage(dpage):
             tempHashes = []
             scanPaths = filePaths
             fileBox.configure(state="normal")
-            fileBox.delete(tk.END, 1.0)
-            fileBox.insert(beautyBreaker)
-            fileBox.insert("Sending files now...\n")
-            fileBox.insert(beautyBreaker)
+            fileBox.delete(1.0, tk.END)
+            fileBox.insert(tk.END, beautyBreaker)
+            fileBox.insert(tk.END, "Sending files now...\n")
+            fileBox.insert(tk.END, beautyBreaker)
             fileBox.configure(state="disabled")
+            sleep(1)
             for path in scanPaths:
                 response = getFileScan(path)
-                tempHash = response.json()[3]
+                tempHash = response.json()
+                tempHash = tempHash.get('sha256')
                 tempName = getFileName(path)
                 tempHashes.append(tempHash)
                 fileBox.configure(state="normal")
-                fileBox.insert(tempName + "\n")
-                fileBox.insert("Sent.")
-                fileBox.insert(beautyBreaker)
-                fileBox.configure(state="diabled")
-            print(tempHashes)
-            fileBox.configure(state="normal")
-            fileBox.insert("Now wait for the results for about a minute.")
-            sleep(60)
-            fileBox.configure(state="normal")
-            fileBox.delete(1.0, tk.END)
-            fileBox.insert(tk.END, beautyBreaker)
-            for hash in tempHashes:
-                insertFileReport(hash)
-                fileBox.insert(tk.END, (hash + "\n"))
-                fileBox.insert(tk.END, (str(extractReportByHash(hash)) + "\n"))
+                fileBox.insert(tk.END, tempName + "\n")
+                fileBox.insert(tk.END, "Sent.\n")
                 fileBox.insert(tk.END, beautyBreaker)
-            fileBox.configure(state="disabled")   
+                fileBox.configure(state="disabled")
+            fileBox.configure(state="normal")
+            fileBox.insert(tk.END, "Now wait for the results. \nIt may take some time; try to fetch reports after.")
+            fileBox.insert(tk.END, beautyBreaker)
+            fileBox.configure(state="disabled")
+
         def fileScanWarning():
             warningWindow = tk.Tk()
             warningWindow["bg"] = "gray15"
@@ -133,15 +127,16 @@ class filesPage(dpage):
             warningWindow.resizable(0, 0)
 
             warningText = '''You are going to send files to VirusTotal for scanning.
-Keep it mind that these files will be stored on VT servers.
+Keep it mind that these files will be stored on VT servers. 32 MB is maximal allowed filesize.
 Are you sure they do not contain data sensitive for you or your organisation?'''
 
             def closeWarningWindowNo():
                 warningWindow.destroy()
 
             def closeWarningWindowYes():
-                scanFiles()
                 warningWindow.destroy()
+                scanFiles()
+
 
             warningLabel = dlabel(warningWindow, text=warningText, justify="center")
             warningButtonYes = dbutton(warningWindow, text="Yes", command=closeWarningWindowYes)
