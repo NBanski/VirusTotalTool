@@ -72,8 +72,6 @@ Do you still want to do this?"""
                 pxPassword = passwordEntry.get()
                 pxAddress = addressEntry.get()
                 pxPort = portEntry.get()
-                envPx = f"http://{pxUser}:{pxPassword}@{pxAddress}:{pxPort}"
-                os.environ["HTTPS_PROXY"] = envPx
                 proxyWindow.destroy()   
 
             bSetProxyConfiguration = dbutton(proxyWindow,
@@ -89,6 +87,9 @@ Do you still want to do this?"""
             portLabel.pack(side="top")
             portEntry.pack(side="top")
             bSetProxyConfiguration.pack(side="top", pady=(10, 10))
+
+        def disableProxy():
+            turnProxy("off")
 
         b1ResetDatabase = dbutton(self, 
         text="Reset database",
@@ -106,7 +107,8 @@ Do you still want to do this?"""
         )
 
         b4Placeholder = dbutton(self,
-        text="Disable proxy."
+        text="Disable proxy.",
+        command=disableProxy
         )
 
         b1ResetDatabase.grid(column=0, row=1, padx=(450, 300), pady=(250, 10))
