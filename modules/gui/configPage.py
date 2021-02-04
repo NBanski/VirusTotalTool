@@ -1,9 +1,10 @@
 import tkinter as tk
-import tkinter.scrolledtext as stxt
+import os
 
-from modules.gui.darkMotive import dframe, dbutton, dlabel, dpage
+from modules.gui.darkMotive import dbutton, dlabel, dpage
 from modules.local.databaseBasic import executeSchema
 from modules.local.settings import setApi
+from modules.network.proxy import turnProxy
 
 class configPage(dpage):
     def __init__(self, *args, **kwargs):
@@ -27,7 +28,7 @@ Do you still want to do this?"""
             b2_yes = dbutton(warningWindow, text="Yes", command=lambda:[executeSchema(), closeWarningWindow()])    
 
             b1_no.pack(side="right", padx=30)
-            b2_yes.pack(side="left", padx=30)
+            b2_yes.pack(side="top", padx=30)
 
         def open_change_api_window():
             change_window = tk.Tk()
@@ -39,14 +40,55 @@ Do you still want to do this?"""
             def close_change_api_window():
                 change_window.destroy()
 
-            apiEntry = tk.Entry(change_window, bg="gray15", fg="white", width=65, show="*") 
-            apiEntry.grid(column=1, row=0, padx=(10,0), pady=(20, 0))
-
             apiLabel = dlabel(change_window, text="Enter API Key:")
             apiLabel.grid(column=0, row=0, padx=(10,0), pady=(20, 0))
 
+            apiEntry = tk.Entry(change_window, bg="gray15", fg="white", width=65, show="*") 
+            apiEntry.grid(column=1, row=0, padx=(10,0), pady=(20, 0))
+
             apiChange = dbutton(change_window, text="Change!", command=lambda:[setApi(apiEntry.get()), close_change_api_window()])
-            apiChange.grid(column=1, row=1, pady=(10, 10))
+            apiChange.grid(column=1, row=1, pady=(10, 10))       
+
+        def openProxySettings():
+            proxyWindow = tk.Tk()
+            proxyWindow["bg"] = "gray15"
+            proxyWindow.title("Proxy settings")
+            proxyWindow.resizable(0, 1)
+
+            loginLabel = dlabel(proxyWindow, text="Enter login:")
+            passwordLabel = dlabel(proxyWindow, text="Enter password:")
+            addressLabel = dlabel(proxyWindow, text="Enter proxy address:")
+            portLabel = dlabel(proxyWindow, text="Enter proxy port:")
+
+            loginEntry = tk.Entry(proxyWindow, bg="gray15", fg="white", width=55)
+            passwordEntry = tk.Entry(proxyWindow, bg="gray15", fg="white", width=55, show="*")
+            addressEntry = tk.Entry(proxyWindow, bg="gray15", fg="white", width=55)
+            portEntry = tk.Entry(proxyWindow, bg="gray15", fg="white", width=55)
+            
+            
+            def closeProxySettings():
+                turnProxy("on")
+                pxUser = loginEntry.get()
+                pxPassword = passwordEntry.get()
+                pxAddress = addressEntry.get()
+                pxPort = portEntry.get()
+                envPx = f"http://{pxUser}:{pxPassword}@{pxAddress}:{pxPort}"
+                os.environ["HTTPS_PROXY"] = envPx
+                proxyWindow.destroy()   
+
+            bSetProxyConfiguration = dbutton(proxyWindow,
+            text="Configure!",
+            command=closeProxySettings)
+
+            loginLabel.pack(side="top", pady=(10,0))
+            loginEntry.pack(side="top")
+            passwordLabel.pack(side="top")
+            passwordEntry.pack(side="top")
+            addressLabel.pack(side="top")
+            addressEntry.pack(side="top")
+            portLabel.pack(side="top")
+            portEntry.pack(side="top")
+            bSetProxyConfiguration.pack(side="top", pady=(10, 10))
 
         b1ResetDatabase = dbutton(self, 
         text="Reset database",
@@ -58,15 +100,16 @@ Do you still want to do this?"""
         command=open_change_api_window
         )
 
-        b3Placeholder = dbutton(self,
-        text="Just a placeholder."
+        setProxy = dbutton(self,
+        text="Set proxy server.",
+        command=openProxySettings
         )
 
         b4Placeholder = dbutton(self,
-        text="Also just a placeholder."
+        text="Disable proxy."
         )
 
         b1ResetDatabase.grid(column=0, row=1, padx=(450, 300), pady=(250, 10))
         b2ChangeApi.grid(column=0, row=2, padx=(450, 300), pady=(0, 10))
-        b3Placeholder.grid(column=0, row=3, padx=(450, 300), pady=(0, 10))
+        setProxy.grid(column=0, row=3, padx=(450, 300), pady=(0, 10))
         b4Placeholder.grid(column=0, row=4, padx=(450, 300), pady=(0, 10))

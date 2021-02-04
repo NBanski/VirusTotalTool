@@ -1,7 +1,8 @@
 import requests
-import json
+import os
 
 from modules.local.settings import loadApi
+from modules.network.proxy import checkProxy
 
 # Request to perform a scan.
 def getUrlScan(urlToScan):
@@ -9,6 +10,7 @@ def getUrlScan(urlToScan):
     apiKey = loadApi()
     params = {"apikey": apiKey, "url": urlToScan}
     response = requests.post(url, data=params)
+    print(response.json())
     return response
 
 # Request for a single report for URL or ID.
@@ -34,5 +36,4 @@ def getFileScan(filePath):
     params = {"apikey": apiKey}
     files = {"file": (filePath, open(filePath, "rb"))}
     response = requests.post(url, files=files, params=params)
-    print(response.json())
     return response

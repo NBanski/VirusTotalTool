@@ -1,6 +1,7 @@
 import os
 from modules.local.databaseBasic import dbPath
 from modules.local.databaseBasic import createDb, executeSchema
+from modules.network.proxy import turnProxy
 
 # Configuration file/directory path.
 workingDirectory = os.path.dirname(__file__)
@@ -23,11 +24,7 @@ def createConfigDirectory():
 
 def createProxyFile(proxyFilePath):
     with open(proxyFilePath, "a") as f:
-        f.write("protocol=\n")
-        f.write("address=\n")
-        f.write("port=\n")
-        f.write("user=\n")
-        f.write("password=\n")
+        f.write("proxy=FALSE")
 
 # Writes VirusTotal API Key into the api file.
 def setApi(key):
@@ -58,6 +55,7 @@ def startConfigFiles():
     isDirectory = os.path.isdir(configDirectoryPath)
     isEnv = os.path.isfile(apiFilePath)
     isProxy = os.path.isfile(proxyFilePath)
+    turnProxy("off")
     if isDirectory == True and isEnv == True and isProxy == True:
         print("All configuration files in place.")
     elif isDirectory == False:
